@@ -14,22 +14,25 @@
       $(document).ready(function(){
          $('[data-toggle="popover"]').popover(); 
       });
+    var gct;
     function show_Menu(){   
-         
+ 
+      
+      $('#divName').show();
       $('#tableMenu tbody').empty();                                                   
       $.get("Servidor_cliente.php", function(datos){                                                                                                                                      
                     
        
-               var gct = JSON.parse(datos);  
+               gct = JSON.parse(datos);  
                for(var i=0;i<gct["AllMenu"].length;i++){
                   
                 //$("#sFile").append("<option value='"+fname+"\\"+gct[i]+"'>"+gct[i]+"</option>");                    
                   //var mm = gct[i];
                  // alert(gct["AllMenu"][i].precio);
                  $('#tableMenu > tbody:last-child').append(' '
-                  +'<tr><td>'+gct["AllMenu"][i].nombre_platillo+'</td>'
+                  +'<tr><td id="p'+gct["AllMenu"][i].id_platillo+'">'+gct["AllMenu"][i].nombre_platillo+'</td>'
                   +'<td>'
-                  +'<select id="sFile" onchange="show_content()">'
+                  +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'
                   + opcion(gct)    
                   +'</select>'
                   +'</td>'
@@ -38,23 +41,53 @@
                   +'<button type="button" class="btn btn-info"  data-toggle="popover" data-trigger="hover"'
                   +'title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'">Info</button>'
                   +'&nbsp;'
-                  +'<button type="button" class="btn btn-warning">Comprar</button>'
+                  +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" type="button" class="btn btn-warning">Comprar</button>'
                   +'</td></tr>');
                };
            });
          
                     
     }
+
+    show_Menu();
     function opcion(g){
       var op='';
       for(var m=0;m<g["AllGuisados"].length;m++){
-       op+= '<option value="'+g["AllGuisados"][m].id_guisado+'">'+g["AllGuisados"][m].nombre_guisado+'</option>'
+       op+= '<option id="'+g["AllGuisados"][m].id_guisado+'">'+g["AllGuisados"][m].nombre_guisado+'</option>'
       }
       return op;
     };
+    var pedido =[];
+    
+    function comprar(id){
+     
+      var orden = new Array(id,$("#p"+id).text(),$("#s"+id).find('option:selected').val());
+      pedido.push(orden);
+      alert("Patillo añadido a pedido");
+      $("#divPedidos").empty();
+      for(var i=0;i<pedido.length;i++){
+       
+      $('<div class="p-2 border">'
+        +'<button onclick="eliminarOrden('+i+')" type="button" class="btn btn-danger" >X</button>'
+        +'&nbsp;&nbsp;'+pedido[i][1]+" de "+pedido[i][2]+' </div>').appendTo(("#divPedidos"));
+
+      }      
+    }
+    function eliminarOrden(id){
+      pedido.splice(id,1);
+      $("#divPedidos").empty();
+      for(var i=0;i<pedido.length;i++){
+       
+      $('<div class="p-2 border">'
+        +'<button onclick="eliminarOrden('+i+')" type="button" class="btn btn-danger" >X</button>'
+        +'&nbsp;&nbsp;'+pedido[i][1]+" de "+pedido[i][2]+' </div>').appendTo(("#divPedidos"));
+
+      }      
+    }
 
 
-    show_Menu();
+
+    
 
     //Agregar otra funcion que reconosca si es directorio o no
 </script>
@@ -87,13 +120,12 @@
           
         </ul>
         <div class="navbar-nav">
+          
           <button
             type="button"
             class="btn btn-success"
             data-toggle="modal"
-            data-target="#myModal"
-            onclick="show_Menu()"
-          >
+            data-target="#myModal">
             Enviar pedido
           </button>
         </div>
@@ -130,24 +162,13 @@
               </div>
             </div>
           </form>
+          <div id="divName" class="alert alert-danger alert-dismissible fade show" style="display:none" >
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>No!</strong> Debes introducir un nombre.
+            </div>
         </div>
         <!--Nombre validacion, Fin-->
-         <!--Pedido, Inicio-->
-         <div id="Pedido">
-            <br /><br /><br />
-            <p class="bg-info text-white">&nbsp;&nbsp; Revisa tu engargo</p>
-            <h2>Pedido</h2>
-            <p>lista de alimentos:</p>
-            <div class="d-flex flex-column">
-                <div class="p-2 border">&nbsp;&nbsp;Vacio</div>
-              <div class="p-2 border"><button type="button" class="btn btn-danger">X</button>&nbsp;&nbsp;Flex item 1</div>
-              <div class="p-2 border"><button type="button" class="btn btn-danger">X</button>&nbsp;&nbsp;Flex item 1</div>
-              <div class="p-2 border"><button type="button" class="btn btn-danger">X</button>&nbsp;&nbsp;Flex item 1</div>
-              
-              
-            </div>
-          </div>
-          <!--Pedido,Fin-->
+       
         <!--Menu, Inicio-->
         <div id="Menu">
           <br /><br /><br />
@@ -171,7 +192,18 @@
         </div>
 
         <!--Menu, Fin-->
-
+  <!--Pedido, Inicio-->
+  <div id="Pedido">
+      <br /><br /><br />
+      <p class="bg-info text-white">&nbsp;&nbsp; Revisa tu engargo</p>
+      <h2>Pedido</h2>
+      <p>lista de alimentos:</p>
+      <div id ="divPedidos" class="d-flex flex-column">
+          <div class="p-2 border">&nbsp;&nbsp;Vacio</div>
+                     
+      </div>
+    </div>
+    <!--Pedido,Fin-->
        
       </div>
     </div>
