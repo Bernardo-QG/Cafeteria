@@ -1,0 +1,60 @@
+<html>
+  <head>
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      
+   <script>
+
+	setInterval(function(){
+		$.get("consulta.php", function(data){
+			$("#conversacion").html(data);
+        	    });
+        	},2000);
+	
+	function guarda(){
+		$.get("consulta2.php?name="+$("#pre").val());
+	}       
+
+	function guarda2(b){
+		$.get("consulta2.php?name="+b.value);
+		alert("Boton "+b.id)
+	}       
+	
+    </script>
+<title>Pedidos</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.anchors {
+  display: block;
+  padding: 5px;
+  background-color: black;
+  color: white;
+}
+
+.mio{
+  background-color: black;
+  color: white;
+}
+
+</style>
+
+   </head>
+  
+<body style="background-color:#2c84dd;" class="text-center"> 
+	<a class="anchors"> 	<hr style="background-color: white;"></a></hr>
+
+       	<h1 style="color: black;"><strong>Pedidos</strong></h1>
+	<hr style="background-color: white;"></hr>
+       	<div style="text-align:center; color:black;" type="text" id="conversacion"></div>
+<!--	<textarea type="text" id="conversacion" cols="40" rows="10"></textarea> -->
+	<br/>
+	
+	<p><input type="text" id="pre" size="30" placeholder="Nombre Cliente"></p>
+	<button style="background-color: black; color: white; FONT-FAMILY: Arial;" class="btn btn-primary" onclick="guarda()"><strong>Actualizar<strong></button>
+	<!-- <a class="anchors"></a> -->
+
+	</body>
+
+</html>
+
