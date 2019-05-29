@@ -119,7 +119,7 @@
   </head>
   <body style="height:1500px; ">
     <!-- Barra de navegacion,Inicio-->
-    <nav style="background-color:rgb(233, 129, 38);" class="navbar navbar-expand-sm  fixed-top" >
+    <nav style="background-color:rgb(233, 61, 38);" class="navbar navbar-expand-sm  fixed-top" >
       <a class="navbar-brand" href="#" style="color: white">CAFETERÍA <i class="fas fa-coffee"></i></a>
       <button
       style="background:white;"
@@ -149,9 +149,11 @@
           
           <button        
             type="button"
-            class="btn btn-info"
+            class="btn bg-warning text-white"
             onclick="enviarPedido()">
+            <b>
             Enviar pedido
+          </b>
           </button>
         </div>
       </div>
@@ -164,7 +166,7 @@
         <!--Nombre validacion, Inicio-->
         <div id="Cliente">
           <br /><br /><br />
-          <h3 class="bg-info text-white">&nbsp;&nbsp;Cliente</h3>
+          <h3 class="bg-warning text-white">&nbsp;&nbsp;Cliente</h3>
           
           <form>
             <div
@@ -197,9 +199,9 @@
         <!--Menu, Inicio-->
         <div id="Menu">
           <br /><br /><br />
-          <h3 class="bg-info text-white">&nbsp;&nbsp;Menú</h3>
+          <h3 class="bg-warning text-white">&nbsp;&nbsp;Menú</h3>
           <table class="table table-bordered" id="tableMenu">
-            <thead style="background-color:rgb(233, 129, 38);color:white;">
+            <thead style="background-color:rgb(233, 61, 38);color:white;">
               <tr>
                 <th>Nombre</th>
                 <th>Guisado</th>
@@ -217,7 +219,7 @@
   <!--Pedido, Inicio-->
   <div id="Pedido">
       <br /><br /><br />
-      <h3 class="bg-info text-white">&nbsp;&nbsp;Tu Pedido</h3>
+      <h3 class="bg-warning text-white">&nbsp;&nbsp;Tu Pedido</h3>
 
 
       <div id ="divPedidos" class="d-flex flex-column">
