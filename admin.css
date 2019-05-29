@@ -15,22 +15,41 @@ section .section-title {
   color: #4677AE;
 }
 th{
-  background: white;
+  background: #F12D2D;
   color: black;
 }
-td{
 
-}
 
 .fas {
-  padding-right: 15px;
   color: white;
 }
 
+.size{
+  width: 30%;
+}
+#tableGuisados{
+  table-layout:fixed;
+}
+#tablePedidos{
+  table-layout:fixed;
+}
+.input-group-text{
+  background: black;
+}
+.modal-title{
+  background: #FCFC36;
+}
 .titulo{
   background: #F12D2D;
   padding: 10px;
   color: white;
+}
+.btn1{
+background-color: #FCFC36;
+border: #FCFC36;
+border-radius: 10%;
+padding: 10px 20px 10px 20px;
+font-weight: bold;
 }
 #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
   color: #f3f3f3;
