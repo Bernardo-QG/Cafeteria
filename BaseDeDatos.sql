@@ -6,6 +6,7 @@ create table menu(
 	id_platillo int not null primary key auto_increment, 
 	nombre_platillo varchar(50), 
     elaboracion varchar(150),
+	imagen varchar(50),
 	precio double,
 	estado_menu int);
 create table guisados(
@@ -21,13 +22,13 @@ create table pedidos(
 	foreign key(fid_guisado) references guisados(id_guisado));
     
     
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Torta', 'Elaborado con telera, lechuga, jitomate, cebolla, chiles encurtidos, aderezo y el guisado de su preferencia.', 25, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Huaraches', 'Elaborado de tortilla nixtamalizada, rellena de queso asadero y el guisado de su preferencia.', 25, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Sandwich', 'Elaborado con pan blancode caja, con vegetales frescos y el guisado de su preferencia.',20, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Quesadillas', 'Elaborado con tortilla de harina, rellena de queso asadero el guisado de su preferencia.', 15, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Burritos', 'Elaborado con tortilla de harina, relleno de frijoles, queso asadero y el guisado de su preferencia.', 15, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Molletes', 'Elaborado de telera, frijoles, queso asadero y el guisado de su preferencia.', 10, 1);
-insert into menu(nombre_platillo, elaboracion, precio, estado_menu) values('Gringas', 'Elaborado de tortilla de harina de 22cm, rellena de queso asadero, vegetales y el guisado de su preferencia.', 25, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Torta', 'Elaborado con telera, lechuga, jitomate, cebolla, chiles encurtidos, aderezo y el guisado de su preferencia.', './imagenes/1.jpg', 25, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Huaraches', 'Elaborado de tortilla nixtamalizada, rellena de queso asadero y el guisado de su preferencia.', './imagenes/2.jpg', 25, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Sandwich', 'Elaborado con pan blancode caja, con vegetales frescos y el guisado de su preferencia.', './imagenes/3.jpg', 20, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Quesadillas', 'Elaborado con tortilla de harina, rellena de queso asadero el guisado de su preferencia.', './imagenes/4.jpg', 15, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Burritos', 'Elaborado con tortilla de harina, relleno de frijoles, queso asadero y el guisado de su preferencia.', './imagenes/5.jpg', 15, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Molletes', 'Elaborado de telera, frijoles, queso asadero y el guisado de su preferencia.', './imagenes/6.jpg', 10, 1);
+insert into menu(nombre_platillo, elaboracion, imagen, precio, estado_menu) values('Gringas', 'Elaborado de tortilla de harina de 22cm, rellena de queso asadero, vegetales y el guisado de su preferencia.', './imagenes/7.jpg', 25, 1);
 
 insert into guisados(nombre_guisado, estado_guisado) values('Milanesa', 1);
 insert into guisados(nombre_guisado, estado_guisado) values('Lomo', 1);

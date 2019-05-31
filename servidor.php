@@ -9,9 +9,14 @@ $con = mysqli_connect($db_host, $db_user, $db_pass, $db_name, 3307);
 if(mysqli_connect_errno()){
 	echo 'No se pudo conectar a la base de datos : '.mysqli_connect_error();
 }
- 
 else{
-	$sql = "SELECT * FROM Menu WHERE estado_menu = 1";
+	$buscar = $_GET['buscar'];
+	if($buscar != ""){
+		$sql = "SELECT * FROM menu WHERE nombre_platillo LIKE '%$buscar%' OR elaboracion LIKE '%$buscar%'";
+	}
+	else{
+		$sql = "SELECT * FROM Menu WHERE estado_menu = 1";
+	}
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result)>0) {
    		 while($row = mysqli_fetch_assoc($result)) {

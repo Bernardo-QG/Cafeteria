@@ -29,17 +29,21 @@
 <script>
     var identificador=0;
     var gct;
+		var busqueda="";
+		var nueva = 0;
+		var ruta ="";
     function show_Tablas(){   
       $('#tableMenu tbody').empty();
 			$('#tableGuisados tbody').empty(); 
 			$('#tablePedidos tbody').empty();                                                    
-      $.get("servidor.php", function(datos){                                                                                                                                      
+      $.get("servidor.php?buscar="+busqueda, function(datos){                                                                                                                                      
                gct = JSON.parse(datos);  
                for(var i=0;i<gct["AllMenu"].length;i++){
 				$('#tableMenu > tbody:last-child').append(' '
 				  +'<tr><td>'+(i+1)+'</td>'
 				  +'<td id="p'+gct["AllMenu"][i].id_platillo+'">'+gct["AllMenu"][i].nombre_platillo+'</td>'
-				  +'<td>'+gct["AllMenu"][i].elaboracion+'</td>'
+				  +'<td><img class="icono" width="150" src="'+gct["AllMenu"][i].imagen+'" onclick="imgB('+i+')" ></td>'
+					+'<td>'+gct["AllMenu"][i].elaboracion+'</td>' //data-toggle="modal" data-target="#myModal"
 				  +'<td>$'+gct["AllMenu"][i].precio+'</td>'
 				  +'<td style="width:180;">'
                   +'<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal_platillo" onclick="valores('+i+',1)" ><i class="fas fa-edit"></i></button>'
@@ -115,11 +119,12 @@
 	}
 
 	function guardar(op){
+		
 		if(op == 1){
 			var n = $('#nombre_platillo').val();
 			var e = $('#elaboracion').val();
 			var p = $('#precio').val();
-			$.get("./servidor_guardar.php?id="+identificador+"&op="+op+"&p1="+n+"&p2="+e+"&p3="+p, function(respuesta){
+			$.post("./servidor_guardar.php",{id:identificador, opcion:op, p1:n, p2:e, p3:p, n:nueva}, function(respuesta){
 				if(respuesta ==1){
 				$('#alerta').append('<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Información guardada con éxito</div>');
 			}
@@ -128,12 +133,15 @@
 			}
 				$('#modal_platillo').modal('hide');
 				show_Tablas();
-				quitalert();
+				setTimeout(function() {
+					location.reload();
+			}, 4000);
+			quitalert();
 			});
 		}
 		else{
 			var n = $('#nombre_guisado').val();
-			$.get("./servidor_guardar.php?id="+identificador+"&op="+op+"&p1="+n, function(respuesta){
+			$.post("./servidor_guardar.php",{id:identificador, opcion:op, p1:n}, function(respuesta){
 				if(respuesta ==1){
 				$('#alerta').append('<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Información actualizada con éxito</div>');
 			}
@@ -146,7 +154,49 @@
 				quitalert();
 			});
 		}
+		nueva = 0;
 	}
+
+	function busq(){
+		busqueda = $('#buscar').val();
+		//confirm($('#buscar').val());
+		show_Tablas();
+	}
+
+	function send_file(){
+			var pdrs = document.getElementById('file-upload').files[0].name;
+    	document.getElementById('info').innerHTML = pdrs;
+      var read = new FileReader();
+      read.onload =  function(){
+      var datos = read.result;
+      var encoded = btoa(datos);
+			nueva = 1;
+      $.post("imagen.php", encoded, function(){});
+			
+								}
+                read.readAsBinaryString(event.target.files[0]);
+								
+            }
+
+						function centerModal() {
+    $(this).css('display', 'block');
+    var $dialog = $(this).find(".modal-dialog");
+    var offset = ($(window).height() - $dialog.height()) / 2;
+    // Center modal vertically in window
+    $dialog.css("margin-top", offset);
+}
+
+$('.modal').on('show.bs.modal', centerModal);
+$(window).on("resize", function () {
+    $('.modal:visible').each(centerModal);
+});
+
+function imgB(ruta){
+  $("#img1").attr("src", gct["AllMenu"][ruta].imagen);
+	$('#myModal').modal('show');
+};
+
+
 	</script>
 </head>
 
@@ -155,9 +205,7 @@
 <div class="titulo">
 	<h4 class="section-title"><i class="fas fa-coffee"></i> Administrar Cafetería</h4>
 </div>
-
 <div id="alerta"></div>
-
 <section id="tabs">
 	<div class="container">
 		<div class="row">
@@ -168,21 +216,39 @@
 						<a class="nav-item nav-link" id="nav-g-tab" data-toggle="tab" href="#nav-g" role="tab" aria-controls="nav-g" aria-selected="false">Guisados</a>
 						<a class="nav-item nav-link" id="nav-pe-tab" data-toggle="tab" href="#nav-pe" role="tab" aria-controls="nav-pe" aria-selected="false">Pedidos</a>
 					</div>
-				</nav>
+				</nav> 
 				<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
 					<div class="tab-pane fade show active" id="nav-p" role="tabpanel" aria-labelledby="nav-p-tab">
                         <div class="container">
 							<div class="content">
 								
 							<br />
+			
+<div class="row">
+	<div class="input-group col-md-6">
+		<input type="text" class="  search-query form-control" placeholder="Buscar"  id="buscar"/>
+		<span class="input-group-btn">
+				<button class="btn btn-danger" id="b" type="button" onclick='busq()'>
+					<i class="fas fa-search"></i>
+				</button>
+		</span>
+
+	</div>
+		<div class="col-md-6">
+	<button type="button" class="btn btn1 btn-md float-right" id="agregar_platillo" onclick = 'limpiar()' data-toggle="modal" data-target="#modal_platillo">Agregar Platillo</button>
+	</div>
+</div>
+<br>
+
 							<div class="table-responsive ">
 								<table class="table table-bordered" id="tableMenu">
 									<thead>	
 										<tr>
 											<th>No</th>
 											<th>Nombre</th>
-											<th>Elaboración</th>
-                    						<th>Precio</th>
+											<th>Foto</th>
+											<th width="50%">Elaboración</th>
+                    	<th>Precio</th>
 											<th>Acciones</th>
 										</tr>
 									</thead>
@@ -194,7 +260,7 @@
 							</div>
 							</div>
 						</div>
-						<center><button type="button" class="btn btn1 btn-md" id="agregar_platillo" onclick = 'limpiar()' data-toggle="modal" data-target="#modal_platillo">Agregar Platillo</button>	</center>
+						
 					</div>
 					<div class="tab-pane fade" id="nav-g" role="tabpanel" aria-labelledby="nav-g-tab">
 					<div class="container">
@@ -206,7 +272,7 @@
 									<thead>	
 										<tr>
 											<th>No</th>
-											<th>Nombre</th>
+											<th width="50%">Nombre</th>
 											<th>Acciones</th>
 										</tr>
 									</thead>
@@ -218,6 +284,7 @@
 							</div>
 							</div>
 						</div>
+						<br>
 						<center><button type="button" class="btn btn1 btn-md" id="agregar_guisado" onclick = 'limpiar()' data-toggle="modal" data-target="#modal_guisado">Agregar Guisado</button>	</center>
 					</div>
 					<div class="tab-pane fade" id="nav-pe" role="tabpanel" aria-labelledby="nav-pe-tab">
@@ -229,10 +296,10 @@
 								<table class="table table-bordered" id="tablePedidos">
 									<thead>	
 										<tr>
-											<th>No</th>
-											<th>Cliente</th>
+											<th width="10%">No</th>
+											<th width="50%">Cliente</th>
 											<th>Platillo</th>
-                    						<th>Guisado</th>
+                    	<th>Guisado</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -242,6 +309,9 @@
 							</div>
 
 					</div>
+					<br>
+						<center><button type="button" class="btn btn1 btn-md" id="actualizar_pedidos" onclick = 'show_Tablas()' >Actualizar</button>	</center>
+					
 				</div>
 			
 			</div>
@@ -264,12 +334,14 @@
 	  <div class="card-header p-0">
 	  		<div class="form-group">
             	<div class="input-group mb-4">
-                	<div class="input-group-prepend">
+								
+								
+								<div class="input-group-prepend">
                     	<div class="input-group-text"><i class="fas fa-utensils"></i></div>
                 	</div>
                 	<input type="text" class="form-control" id="nombre_guisado" name="nombre_guisado" placeholder="Nombre" required>
                  </div>
-             </div>
+          </div>
       </div>
       <div class="modal-footer d-flex justify-content-center">
         <button  type="button" class="btn btn1" onclick= "guardar(2)">Guardar guisado</button>
@@ -283,8 +355,8 @@
 </section>
 <div class="modal fade" id="modal_platillo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
+  <div class="modal-dialog" role="document" id="mdial" >
+    <div class="modal-content"> 
       <div class="modal-header text-center">
         <h4 class="modal-title w-100 font-weight-bold">Platillo</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -293,7 +365,7 @@
       </div>
       <div class="modal-body mx-3">
 	  <div class="card-header p-0">
-	  		<div class="form-group">
+			<div class="form-group">
             	<div class="input-group mb-1">
                 	<div class="input-group-prepend">
                     	<div class="input-group-text"><i class="fas fa-utensils"></i></div>
@@ -308,16 +380,26 @@
                 	</div>
                 	<input type="text" class="form-control" id="elaboracion" name="elaboracion" placeholder="Elaboración" required>
                  </div>
-             </div>
-			 <div class="form-group">
+						 </div>
+						 <div class="form-group">
             	<div class="input-group mb-3">
                 	<div class="input-group-prepend">
-                    	<div class="input-group-text"><i class="fas fa-money-bill-alt"></i></button>
+                    	<div class="input-group-text"><i class="fas fa-money-bill-alt"></i></div>
                 	</div>
                 	<input type="text" class="form-control" id="precio" name="precio" placeholder="Precio" required>
                  </div>
              </div>
-      </div>
+						 <div class="form-group">
+								<label for="file-upload" id="subir">
+										<i class="fas fa-cloud-upload-alt"></i> Subir archivo
+								</label>
+								<input id="file-upload" onchange="send_file(event)" type="file" style='display: none;'/>
+								<div id="info"></div>
+								
+						 </div>
+			</div>
+		</div>
+		
       <div class="modal-footer d-flex justify-content-center">
         <button  type="button" class="btn btn1" onclick= "guardar(1)">Guardar platillo</button>
       </div>
@@ -326,7 +408,16 @@
 </div>
 </section>
 <section>
+		<div id="myModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+							<div class="modal-body">
+									<img src="" width="765" class="img-responsive" id="img1">
 
+							</div>
+					</div>
+				</div>
+			</div>
 </section>
 
 </body>
