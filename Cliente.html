@@ -8,13 +8,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
     <script>
      
     var gct;
     function show_Menu(){   
       
      
-      $('#tableMenu tbody').empty();                                                   
+      $('#divMenu').empty();                                                   
       $.get("Servidor_cliente.php", function(datos){                                                                                                                                      
                     
        
@@ -24,7 +25,7 @@
                 //$("#sFile").append("<option value='"+fname+"\\"+gct[i]+"'>"+gct[i]+"</option>");                    
                   //var mm = gct[i];
                  // alert(gct["AllMenu"][i].precio);
-                 $('#tableMenu > tbody:last-child').append(' '
+               /*  $('#tableMenu > tbody:last-child').append(' '
                   +'<tr><td id="p'+gct["AllMenu"][i].id_platillo+'">'+gct["AllMenu"][i].nombre_platillo+'</td>'
                   +'<td>'
                   +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'
@@ -37,8 +38,23 @@
                   +'title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
                   +'&nbsp;'
                   +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" type="button"  class="btn btn-info"><i class="fas fa-heart" style="color:white;"></i></button>'
-                  +'</td></tr>');
-               };
+                  +'</td></tr>');*/
+
+                  
+                  $('#divMenu').append(' '
+                  +'<div class="card p-2 border" style="width:300px">'
+                  +'<img class="card-img-top rounded" src="https://d25rq8gxcq0p71.cloudfront.net/language-guide/758/pepperoni%20pizza.jpg" alt="Card image" style="width:100%">'
+                  +'<div class="card-body">'
+                  +'<h5>'+gct["AllMenu"][i].nombre_platillo+' a <b style="font-size: 25px">$'+gct["AllMenu"][i].precio+'</b></h5>'
+                  +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'+opcion(gct)+'</select>'
+                  +'&nbsp;'
+                  +'<button type="button" style="background-color:#A569BD;" class="btn"  data-toggle="popover" data-trigger="hover"'
+                  +'title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
+                  +'&nbsp;'
+                  +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" id="p'+gct["AllMenu"][i].id_platillo+'" value="'+gct["AllMenu"][i].nombre_platillo+'" type="button"  class="btn btn-info"><i class="fas fa-heart" style="color:white;"></i></button>'
+                  +'</div></div>&nbsp;&nbsp;');
+                   
+               }
            });
          
                     
@@ -56,7 +72,7 @@
 
     function comprar(id){
 
-      var orden = new Array(id,$("#p"+id).text(),$("#s"+id).find('option:selected').val(),$("#s"+id).find('option:selected').attr("id"));
+      var orden = new Array(id,$("#p"+id).attr("value"),$("#s"+id).find('option:selected').val(),$("#s"+id).find('option:selected').attr("id"));
       pedido.push(orden);
       //alert("Patillo añadido a pedido");
       $("#divPedidos").empty();
@@ -114,6 +130,11 @@
 
     //Agregar otra funcion que reconosca si es directorio o no
 </script>
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover();   
+    });
+    </script>
 
 
   </head>
@@ -160,7 +181,6 @@
     </nav>
     <!-- Barra de navegacion,Fin-->
 
-    
     <div class="container-fluid" style="margin-top:0px">
       <div class="container">
         <!--Nombre validacion, Inicio-->
@@ -195,11 +215,18 @@
             </div>
         </div>
         <!--Nombre validacion, Fin-->
-       
+        
+          
         <!--Menu, Inicio-->
         <div id="Menu">
           <br /><br /><br />
           <h3 class="bg-warning text-white">&nbsp;&nbsp;Menú</h3>
+        <div id="divMenu" class="d-flex flex-wrap bg-light">
+        </div>
+      </div>
+
+        <!--
+         
           <table class="table table-bordered" id="tableMenu">
             <thead style="background-color:rgb(233, 61, 38);color:white;">
               <tr>
@@ -214,6 +241,7 @@
             </tbody>
           </table>
         </div>
+        -->
 
         <!--Menu, Fin-->
   <!--Pedido, Inicio-->
