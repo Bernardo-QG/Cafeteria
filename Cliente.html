@@ -42,8 +42,8 @@
 
                   
                   $('#divMenu').append(' '
-                  +'<div class="card p-2 border" style="width:300px">'
-                  +'<img class="card-img-top rounded" src="https://d25rq8gxcq0p71.cloudfront.net/language-guide/758/pepperoni%20pizza.jpg" alt="Card image" style="width:100%">'
+                  +'<div class="mx-auto d-block card p-2 border" style="width:270px">'
+                  +'<img class="card-img-top rounded" src="'+gct["AllMenu"][i].imagen+'" alt="Card image" style="width:100%">'
                   +'<div class="card-body">'
                   +'<h5>'+gct["AllMenu"][i].nombre_platillo+' a <b style="font-size: 25px">$'+gct["AllMenu"][i].precio+'</b></h5>'
                   +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'+opcion(gct)+'</select>'
@@ -138,7 +138,7 @@
 
 
   </head>
-  <body style="height:1500px; ">
+  <body >
     <!-- Barra de navegacion,Inicio-->
     <nav style="background-color:rgb(233, 61, 38);" class="navbar navbar-expand-sm  fixed-top" >
       <a class="navbar-brand" href="#" style="color: white">CAFETERÍA <i class="fas fa-coffee"></i></a>
@@ -221,7 +221,7 @@
         <div id="Menu">
           <br /><br /><br />
           <h3 class="bg-warning text-white">&nbsp;&nbsp;Menú</h3>
-        <div id="divMenu" class="d-flex flex-wrap bg-light">
+        <div id="divMenu" class="mx-auto d-block d-flex flex-wrap bg-light">
         </div>
       </div>
 
@@ -256,7 +256,7 @@
       </div>
     </div>
     <!--Pedido,Fin-->
-       
+       <div style="height: 500px"></div>
       </div>
     </div>
   </body>
