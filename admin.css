@@ -1,0 +1,88 @@
+section {
+  padding: 20px 0;
+}
+
+section .section-title {
+  text-align: center;
+  color: #4677AE;
+  text-transform: uppercase;
+}
+/*#tabs{
+  background: #4677AE;
+  color: #eee;
+}*/
+#tabs h6.section-title{
+  color: #4677AE;
+}
+th{
+  background: #F12D2D;
+  color: black;
+}
+
+
+.fas {
+  color: white;
+}
+
+.size{
+  width: 30%;
+}
+#tableGuisados{
+  table-layout:fixed;
+}
+#tablePedidos{
+  table-layout:fixed;
+}
+.input-group-text{
+  background: black;
+}
+.modal-title{
+  background: #FCFC36;
+}
+.titulo{
+  background: #F12D2D;
+  padding: 10px;
+  color: white;
+}
+.btn1{
+background-color: #FCFC36;
+border: #FCFC36;
+border-radius: 0%;
+padding: 10px 20px 10px 20px;
+font-weight: bold;
+border-radius: 2%;
+height: 45px;
+}
+#tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  color: #f3f3f3;
+  background-color: #FCFC36;
+  border-color: transparent transparent #f3f3f3;
+  border-bottom: 4px solid #FCFC36 !important;
+  font-size: 20px;
+  font-weight: bold;
+}
+#tabs .nav-tabs .nav-link {
+  border: 1px solid transparent;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  color: black;
+  font-size: 20px;
+}
+#b{
+  width: 45px;
+  height: 45px;
+}
+#mdial{
+  width: 100% !important;
+}
+#subir{
+  padding: 5px 10px;
+  background: black;
+  color:#fff;
+  border:0px solid #fff;
+}
+
+#subir:hover{
+  color:#fff;
+  background: #f7cb15;
+}
