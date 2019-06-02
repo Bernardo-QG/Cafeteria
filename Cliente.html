@@ -16,7 +16,7 @@
       
      
       $('#divMenu').empty();                                                   
-      $.get("Servidor_cliente.php", function(datos){                                                                                                                                      
+      $.get("Servidor.php?buscar=", function(datos){                                                                                                                                      
                     
        
                gct = JSON.parse(datos);  
@@ -84,7 +84,7 @@
         if(pedido.length>0){
        
           for (let i = 0; i < pedido.length; i++) {
-            $.get("Servidor_cliente_pedido.php?nombre="+$("#uname").val()+"&platillo="+pedido[i][0]+"&guisado="+pedido[i][3]);
+            $.get("Servidor_insertPedido.php?nombre="+$("#uname").val()+"&platillo="+pedido[i][0]+"&guisado="+pedido[i][3]);
           }
          
          alert("Pedido enviado");
