@@ -10,7 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   
     <script>
-     
+ 
     var gct;
     function show_Menu(){   
       
@@ -21,26 +21,7 @@
        
                gct = JSON.parse(datos);  
                for(var i=0;i<gct["AllMenu"].length;i++){
-                  
-                //$("#sFile").append("<option value='"+fname+"\\"+gct[i]+"'>"+gct[i]+"</option>");                    
-                  //var mm = gct[i];
-                 // alert(gct["AllMenu"][i].precio);
-               /*  $('#tableMenu > tbody:last-child').append(' '
-                  +'<tr><td id="p'+gct["AllMenu"][i].id_platillo+'">'+gct["AllMenu"][i].nombre_platillo+'</td>'
-                  +'<td>'
-                  +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'
-                  + opcion(gct)    
-                  +'</select>'
-                  +'</td>'
-                  +'<td>$'+gct["AllMenu"][i].precio+'</td>'
-                  +'<td style="width:180;">'
-                  +'<button type="button" style="background-color:#A569BD;" class="btn"  data-toggle="popover" data-trigger="hover"'
-                  +'title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
-                  +'&nbsp;'
-                  +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" type="button"  class="btn btn-info"><i class="fas fa-heart" style="color:white;"></i></button>'
-                  +'</td></tr>');*/
-
-                  
+                                   
                   $('#divMenu').append(' '
                   +'<div class="mx-auto d-block card p-2 border" style="width:270px">'
                   +'<img class="card-img-top rounded" src="'+gct["AllMenu"][i].imagen+'" alt="Card image" style="width:100%">'
@@ -49,7 +30,7 @@
                   +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'+opcion(gct)+'</select>'
                   +'&nbsp;'
                   +'<button type="button" style="background-color:#A569BD;" class="btn"  data-toggle="popover" data-trigger="hover"'
-                  +'title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
+                  +' title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
                   +'&nbsp;'
                   +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" id="p'+gct["AllMenu"][i].id_platillo+'" value="'+gct["AllMenu"][i].nombre_platillo+'" type="button"  class="btn btn-info"><i class="fas fa-heart" style="color:white;"></i></button>'
                   +'</div></div>&nbsp;&nbsp;');
@@ -61,6 +42,7 @@
     }
 
     show_Menu();
+ 
     function opcion(g){
       var op='';
       for(var m=0;m<g["AllGuisados"].length;m++){
@@ -100,13 +82,11 @@
       if($("#uname").val()!=""){
               
         if(pedido.length>0){
-          //var pedidoJSON = JSON.stringify(pedido);
-         // $.get("Servidor_cliente_pedido.php?pedido="+pedidoJSON+"&nombre="+$("#uname").val(),function(dato){
+       
           for (let i = 0; i < pedido.length; i++) {
             $.get("Servidor_cliente_pedido.php?nombre="+$("#uname").val()+"&platillo="+pedido[i][0]+"&guisado="+pedido[i][3]);
           }
          
-         // alert(pedidoJSON);
          alert("Pedido enviado");
          location.reload();
          
@@ -123,17 +103,7 @@
            document.getElementById("divName").style.display="none";
 
     }
-
-
-
-    
-
-    //Agregar otra funcion que reconosca si es directorio o no
-</script>
-  <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover();   
-    });
+   
     </script>
 
 
@@ -225,24 +195,10 @@
         </div>
       </div>
 
-        <!--
          
-          <table class="table table-bordered" id="tableMenu">
-            <thead style="background-color:rgb(233, 61, 38);color:white;">
-              <tr>
-                <th>Nombre</th>
-                <th>Guisado</th>
-                <th>Precio</th>
-                <th>Adquirir</th>
-              </tr>
-            </thead>
-            <tbody>
-            
-            </tbody>
-          </table>
+        
         </div>
-        -->
-
+      
         <!--Menu, Fin-->
   <!--Pedido, Inicio-->
   <div id="Pedido">
@@ -259,5 +215,10 @@
        <div style="height: 500px"></div>
       </div>
     </div>
+    <script>
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();   
+      });
+      </script>
   </body>
 </html>
