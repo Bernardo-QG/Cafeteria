@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>Cafetería</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script  src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./admin.css">
+	
+	<script type="text/javascript">
+        window.alert = function(){};
+        var defaultCSS = document.getElementById('bootstrap-css');
+        function changeCSS(css){
+            if(css) $('head > link').filter(':first').replaceWith('<link rel="stylesheet" href="'+ css +'" type="text/css" />'); 
+            else $('head > link').filter(':first').replaceWith(defaultCSS); 
+        }
+        $( document ).ready(function() {
+          var iframe_height = parseInt($('html').height()); 
+          window.parent.postMessage( iframe_height, 'https://bootsnipp.com');
+        });
+    </script>
+
+<script>
+    var identificador=0;
+    var gct;
+		var busqueda="";
+		var nueva = 0;
+		var ruta ="";
+    function show_Tablas(){   
+      $('#tableMenu tbody').empty();
+			$('#tableGuisados tbody').empty(); 
+			$('#tablePedidos tbody').empty();                                                    
+      $.get("servidor.php?buscar="+busqueda, function(datos){                                                                                                                                      
+               gct = JSON.parse(datos);  
+               for(var i=0;i<gct["AllMenu"].length;i++){
+				$('#tableMenu > tbody:last-child').append(' '
+				  +'<tr><td>'+(i+1)+'</td>'
+				  +'<td id="p'+gct["AllMenu"][i].id_platillo+'">'+gct["AllMenu"][i].nombre_platillo+'</td>'
+				  +'<td><img class="icono" width="150" src="'+gct["AllMenu"][i].imagen+'" onclick="imgB('+i+')" ></td>'
+					+'<td>'+gct["AllMenu"][i].elaboracion+'</td>' //data-toggle="modal" data-target="#myModal"
+				  +'<td>$'+gct["AllMenu"][i].precio+'</td>'
+				  +'<td style="width:180;">'
+                  +'<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal_platillo" onclick="valores('+i+',1)" ><i class="fas fa-edit"></i></button>'
+				  +'&nbsp;'
+				  +'<button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+gct["AllMenu"][i].id_platillo+',1)" ><i class="fas fa-trash-alt"></i></button>'
+                  +'</td></tr>');
+			   };
+			   for(var j=0;j<gct["AllGuisados"].length;j++){
+				$('#tableGuisados > tbody:last-child').append(' '
+				  +'<tr><td>'+(j+1)+'</td>'
+				  +'<td id="g'+gct["AllGuisados"][j].id_guisado+'">'+gct["AllGuisados"][j].nombre_guisado+'</td>'
+				  +'<td style="width:180;">'
+                  +'<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal_guisado" onclick="valores('+j+',2)" ><i class="fas fa-edit"></i></button>'
+				  +'&nbsp;'
+				  +'<button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+gct["AllGuisados"][j].id_guisado+',2)" ><i class="fas fa-trash-alt"></i></a>'
+                  +'</td></tr>');
+			   };
+				 for(var k=0;k<gct["AllPedidos"].length;k++){
+				$('#tablePedidos > tbody:last-child').append(' '
+				  +'<tr><td>'+(k+1)+'</td>'
+				  +'<td id="pe'+gct["AllPedidos"][k].id_pedido+'">'+gct["AllPedidos"][k].nombre_cliente+'</td>'
+				  +'<td>'+gct["AllPedidos"][k].nombre_platillo+'</td>'
+				  +'<td>'+gct["AllPedidos"][k].nombre_guisado+'</td></tr>');
+			   };
+           });    
+	}
+	show_Tablas();
+
+	function eliminar(id, op){
+		
+		$.get("./servidor_borrar.php?id="+id+"&op="+op, function(respuesta){
+			if(respuesta ==1){
+				$('#alerta').append('<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Información eliminada con éxito</div>');
+			}
+			else{
+				$('#alerta').append('<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>No se pudo eliminar la información</div>');
+			}
+			
+			show_Tablas();
+			quitalert();
+		});
+	}
+
+	function quitalert(){
+		setTimeout(function() {
+				$('#alerta').empty();
+			}, 5000);
+	}
+
+	function limpiar(){
+		$('#nombre_platillo').val("");
+		$('#elaboracion').val("");
+		$('#precio').val("");
+		$('#nombre_guisado').val("");
+	}
+
+	function valores(id, op){
+		var aux;
+		if (op==1){
+			aux = gct["AllMenu"][id].nombre_platillo;
+			$('#nombre_platillo').val(aux);
+			aux = gct["AllMenu"][id].elaboracion;
+			$('#elaboracion').val(aux);
+			aux = gct["AllMenu"][id].precio;
+			$('#precio').val(aux);
+			identificador = gct["AllMenu"][id].id_platillo;
+		}
+		else{
+			aux = gct["AllGuisados"][id].nombre_guisado;
+			$('#nombre_guisado').val(aux);
+			identificador = gct["AllGuisados"][id].id_guisado;
+		}
+	}
+
+	function guardar(op){
+		
+		if(op == 1){
+			var n = $('#nombre_platillo').val();
+			var e = $('#elaboracion').val();
+			var p = $('#precio').val();
+			$.post("./servidor_guardar.php",{id:identificador, opcion:op, p1:n, p2:e, p3:p, n:nueva}, function(respuesta){
+				if(respuesta ==1){
+				$('#alerta').append('<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Información guardada con éxito</div>');
+			}
+			else{
+				$('#alerta').append('<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>No se pudo guardar la información</div>');
+			}
+				$('#modal_platillo').modal('hide');
+				show_Tablas();
+				setTimeout(function() {
+					location.reload();
+			}, 4000);
+			quitalert();
+			});
+		}
+		else{
+			var n = $('#nombre_guisado').val();
+			$.post("./servidor_guardar.php",{id:identificador, opcion:op, p1:n}, function(respuesta){
+				if(respuesta ==1){
+				$('#alerta').append('<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Información actualizada con éxito</div>');
+			}
+			else{
+				$('#alerta').append('<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>No se pudo actualizar la información</div>');
+			}
+				$('#modal_guisado').modal('hide');
+				show_Tablas();
+				identificador = 0;
+				quitalert();
+			});
+		}
+		nueva = 0;
+	}
+
+	function busq(){
+		busqueda = $('#buscar').val();
+		//confirm($('#buscar').val());
+		show_Tablas();
+	}
+
+	function send_file(){
+			var pdrs = document.getElementById('file-upload').files[0].name;
+    	document.getElementById('info').innerHTML = pdrs;
+      var read = new FileReader();
+      read.onload =  function(){
+      var datos = read.result;
+      var encoded = btoa(datos);
+			nueva = 1;
+      $.post("imagen.php", encoded, function(){});
+			
+								}
+                read.readAsBinaryString(event.target.files[0]);
+								
+            }
+
+						function centerModal() {
+    $(this).css('display', 'block');
+    var $dialog = $(this).find(".modal-dialog");
+    var offset = ($(window).height() - $dialog.height()) / 2;
+    // Center modal vertically in window
+    $dialog.css("margin-top", offset);
+}
+
+$('.modal').on('show.bs.modal', centerModal);
+$(window).on("resize", function () {
+    $('.modal:visible').each(centerModal);
+});
+
+function imgB(ruta){
+  $("#img1").attr("src", gct["AllMenu"][ruta].imagen);
+	$('#myModal').modal('show');
+};
+
+
+	</script>
+</head>
+
+<body>
+
+<div class="titulo">
+	<h4 class="section-title"><i class="fas fa-coffee"></i> Administrar Cafetería</h4>
+</div>
+<div id="alerta"></div>
+<section id="tabs">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<nav>
+					<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+						<a class="nav-item nav-link active" id="nav-p-tab" data-toggle="tab" href="#nav-p" role="tab" aria-controls="nav-p" aria-selected="true">Platillos</a>
+						<a class="nav-item nav-link" id="nav-g-tab" data-toggle="tab" href="#nav-g" role="tab" aria-controls="nav-g" aria-selected="false">Guisados</a>
+						<a class="nav-item nav-link" id="nav-pe-tab" data-toggle="tab" href="#nav-pe" role="tab" aria-controls="nav-pe" aria-selected="false">Pedidos</a>
+					</div>
+				</nav> 
+				<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-p" role="tabpanel" aria-labelledby="nav-p-tab">
+                        <div class="container">
+							<div class="content">
+								
+							<br />
+			
+<div class="row">
+	<div class="input-group col-md-6">
+		<input type="text" class="  search-query form-control" placeholder="Buscar"  id="buscar"/>
+		<span class="input-group-btn">
+				<button class="btn btn-danger" id="b" type="button" onclick='busq()'>
+					<i class="fas fa-search"></i>
+				</button>
+		</span>
+
+	</div>
+		<div class="col-md-6">
+	<button type="button" class="btn btn1 btn-md float-right" id="agregar_platillo" onclick = 'limpiar()' data-toggle="modal" data-target="#modal_platillo">Agregar Platillo</button>
+	</div>
+</div>
+<br>
+
+							<div class="table-responsive ">
+								<table class="table table-bordered" id="tableMenu">
+									<thead>	
+										<tr>
+											<th>No</th>
+											<th>Nombre</th>
+											<th>Foto</th>
+											<th width="50%">Elaboración</th>
+                    	<th>Precio</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>	
+				
+				
+								</table>
+							</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="tab-pane fade" id="nav-g" role="tabpanel" aria-labelledby="nav-g-tab">
+					<div class="container">
+							<div class="content">
+								
+							<br />
+							<div class="table-responsive">
+								<table class="table table-bordered" id="tableGuisados">
+									<thead>	
+										<tr>
+											<th>No</th>
+											<th width="50%">Nombre</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>	
+				
+				
+								</table>
+							</div>
+							</div>
+						</div>
+						<br>
+						<center><button type="button" class="btn btn1 btn-md" id="agregar_guisado" onclick = 'limpiar()' data-toggle="modal" data-target="#modal_guisado">Agregar Guisado</button>	</center>
+					</div>
+					<div class="tab-pane fade" id="nav-pe" role="tabpanel" aria-labelledby="nav-pe-tab">
+					<div class="container">
+							<div class="content">
+								
+							<br />
+							<div class="table-responsive ">
+								<table class="table table-bordered" id="tablePedidos">
+									<thead>	
+										<tr>
+											<th width="10%">No</th>
+											<th width="50%">Cliente</th>
+											<th>Platillo</th>
+                    	<th>Guisado</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>	
+								</table>
+							</div>
+							</div>
+
+					</div>
+					<br>
+						<center><button type="button" class="btn btn1 btn-md" id="actualizar_pedidos" onclick = 'show_Tablas()' >Actualizar</button>	</center>
+					
+				</div>
+			
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+<div class="modal fade" id="modal_guisado" tabindex="-" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Guisado</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-4">
+	  <div class="card-header p-0">
+	  		<div class="form-group">
+            	<div class="input-group mb-4">
+								
+								
+								<div class="input-group-prepend">
+                    	<div class="input-group-text"><i class="fas fa-utensils"></i></div>
+                	</div>
+                	<input type="text" class="form-control" id="nombre_guisado" name="nombre_guisado" placeholder="Nombre" required>
+                 </div>
+          </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button  type="button" class="btn btn1" onclick= "guardar(2)">Guardar guisado</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+</section>
+<div class="modal fade" id="modal_platillo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document" id="mdial" >
+    <div class="modal-content"> 
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Platillo</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+	  <div class="card-header p-0">
+			<div class="form-group">
+            	<div class="input-group mb-1">
+                	<div class="input-group-prepend">
+                    	<div class="input-group-text"><i class="fas fa-utensils"></i></div>
+                	</div>
+                	<input type="text" class="form-control" id="nombre_platillo" name="nombre_platillo" placeholder="Nombre" required>
+                 </div>
+             </div>
+			 <div class="form-group">
+            	<div class="input-group mb-2">
+                	<div class="input-group-prepend">
+                    	<div class="input-group-text"><i class="fas fa-drumstick-bite"></i></div>
+                	</div>
+                	<input type="text" class="form-control" id="elaboracion" name="elaboracion" placeholder="Elaboración" required>
+                 </div>
+						 </div>
+						 <div class="form-group">
+            	<div class="input-group mb-3">
+                	<div class="input-group-prepend">
+                    	<div class="input-group-text"><i class="fas fa-money-bill-alt"></i></div>
+                	</div>
+                	<input type="text" class="form-control" id="precio" name="precio" placeholder="Precio" required>
+                 </div>
+             </div>
+						 <div class="form-group">
+								<label for="file-upload" id="subir">
+										<i class="fas fa-cloud-upload-alt"></i> Subir archivo
+								</label>
+								<input id="file-upload" onchange="send_file(event)" type="file" style='display: none;'/>
+								<div id="info"></div>
+								
+						 </div>
+			</div>
+		</div>
+		
+      <div class="modal-footer d-flex justify-content-center">
+        <button  type="button" class="btn btn1" onclick= "guardar(1)">Guardar platillo</button>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<section>
+		<div id="myModal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+							<div class="modal-body">
+									<img src="" width="765" class="img-responsive" id="img1">
+
+							</div>
+					</div>
+				</div>
+			</div>
+</section>
+
+</body>
+</html>

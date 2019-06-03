@@ -1,0 +1,224 @@
+<html lang="en">
+  <head>
+    <title>CLIENTES</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
+    <script>
+ 
+    var gct;
+    function show_Menu(){   
+      
+     
+      $('#divMenu').empty();                                                   
+      $.get("Servidor.php?buscar=", function(datos){                                                                                                                                      
+                    
+       
+               gct = JSON.parse(datos);  
+               for(var i=0;i<gct["AllMenu"].length;i++){
+                                   
+                  $('#divMenu').append(' '
+                  +'<div class="mx-auto d-block card p-2 border" style="width:270px">'
+                  +'<img class="card-img-top rounded" src="'+gct["AllMenu"][i].imagen+'" alt="Card image" style="width:100%">'
+                  +'<div class="card-body">'
+                  +'<h5>'+gct["AllMenu"][i].nombre_platillo+' a <b style="font-size: 25px">$'+gct["AllMenu"][i].precio+'</b></h5>'
+                  +'<select id="s'+gct["AllMenu"][i].id_platillo+'">'+opcion(gct)+'</select>'
+                  +'&nbsp;'
+                  +'<button type="button" style="background-color:#A569BD;" class="btn"  data-toggle="popover" data-trigger="hover"'
+                  +' title="Elaboración" data-content="'+gct["AllMenu"][i].elaboracion+'"><i class="fas fa-info" style="color:white;"></i></button>'
+                  +'&nbsp;'
+                  +'<button onclick="comprar('+gct["AllMenu"][i].id_platillo+')" id="p'+gct["AllMenu"][i].id_platillo+'" value="'+gct["AllMenu"][i].nombre_platillo+'" type="button"  class="btn btn-info"><i class="fas fa-heart" style="color:white;"></i></button>'
+                  +'</div></div>&nbsp;&nbsp;');
+                   
+               }
+           });
+         
+                    
+    }
+
+    show_Menu();
+ 
+    function opcion(g){
+      var op='';
+      for(var m=0;m<g["AllGuisados"].length;m++){
+       op+= '<option id="'+g["AllGuisados"][m].id_guisado+'">'+g["AllGuisados"][m].nombre_guisado+'</option>'
+      }
+      return op;
+    };
+    var pedido =[];
+
+    function comprar(id){
+
+      var orden = new Array(id,$("#p"+id).attr("value"),$("#s"+id).find('option:selected').val(),$("#s"+id).find('option:selected').attr("id"));
+      pedido.push(orden);
+      //alert("Patillo añadido a pedido");
+      $("#divPedidos").empty();
+      for(var i=0;i<pedido.length;i++){
+       
+      $('<div class="p-2 border">'
+        +'<button onclick="eliminarOrden('+i+')" type="button" class="btn btn-danger" >X</button>'
+        +'&nbsp;&nbsp;'+pedido[i][1]+" de "+pedido[i][2]+' </div>').appendTo(("#divPedidos"));
+
+      }      
+    }
+    function eliminarOrden(id){
+      pedido.splice(id,1);
+      $("#divPedidos").empty();
+      for(var i=0;i<pedido.length;i++){
+       
+      $('<div class="p-2 border">'
+        +'<button onclick="eliminarOrden('+i+')" type="button" class="btn btn-danger" >X</button>'
+        +'&nbsp;&nbsp;'+pedido[i][1]+" de "+pedido[i][2]+' </div>').appendTo(("#divPedidos"));
+
+      }      
+    }
+    function enviarPedido(){
+     var contador=0;
+      if($("#uname").val()!=""){
+              
+        if(pedido.length>0){
+       
+          for (let i = 0; i < pedido.length; i++) {
+            $.get("Servidor_insertPedido.php?nombre="+$("#uname").val()+"&platillo="+pedido[i][0]+"&guisado="+pedido[i][3]);
+          }
+         
+         alert("Pedido enviado");
+         location.reload();
+         
+        }
+        else{
+          alert("No ha ordenado ningun platillo");
+        }
+      }
+      else {
+        $('#divName').show();
+      }
+    }
+    function dnone(){
+           document.getElementById("divName").style.display="none";
+
+    }
+   
+    </script>
+
+
+  </head>
+  <body >
+    <!-- Barra de navegacion,Inicio-->
+    <nav style="background-color:rgb(233, 61, 38);" class="navbar navbar-expand-sm  fixed-top" >
+      <a class="navbar-brand" href="#" style="color: white">CAFETERÍA <i class="fas fa-coffee"></i></a>
+      <button
+      style="background:white;"
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapsibleNavbar"
+      >
+      <i class="fas fa-bars"></i>
+       
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="nav navbar-nav mr-auto" >
+          <li class="nav-item">
+            <a class="nav-link" href="#Cliente"  style="color: white">Cliente</a>
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="#Menu"  style="color: white">Menú</a>
+          </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#Pedido"  style="color: white">Pedido</a>
+          </li>
+          
+        </ul>
+        <div class="navbar-nav">
+          
+          <button        
+            type="button"
+            class="btn bg-warning text-white"
+            onclick="enviarPedido()">
+            <b>
+            Enviar pedido
+          </b>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <!-- Barra de navegacion,Fin-->
+
+    <div class="container-fluid" style="margin-top:0px">
+      <div class="container">
+        <!--Nombre validacion, Inicio-->
+        <div id="Cliente">
+          <br /><br /><br />
+          <h3 class="bg-warning text-white">&nbsp;&nbsp;Cliente</h3>
+          
+          <form>
+            <div
+              action="/action_page.php"
+              class="was-validated input-group mb-3" q>
+              <div class="input-group-prepend">
+                <span class="input-group-text">Nombre</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="uname"
+                placeholder=""
+                name="uname"
+                required
+              />
+              <div class="valid-feedback">Hola : )</div>
+              <div class="invalid-feedback">
+                Introduzca su nombre completo : (
+              </div>
+            </div>
+          </form>
+          <div id="divName" class="alert alert-danger alert-dismissible fade show" style="display:none" >
+              <button type="button" class="close" onclick="dnone()">&times;</button>
+              <strong>No!</strong> Debes introducir un nombre.
+            </div>
+        </div>
+        <!--Nombre validacion, Fin-->
+        
+          
+        <!--Menu, Inicio-->
+        <div id="Menu">
+          <br /><br /><br />
+          <h3 class="bg-warning text-white">&nbsp;&nbsp;Menú</h3>
+        <div id="divMenu" class="mx-auto d-block d-flex flex-wrap bg-light">
+        </div>
+      </div>
+
+         
+        
+        </div>
+      
+        <!--Menu, Fin-->
+  <!--Pedido, Inicio-->
+  <div id="Pedido">
+      <br /><br /><br />
+      <h3 class="bg-warning text-white">&nbsp;&nbsp;Tu Pedido</h3>
+
+
+      <div id ="divPedidos" class="d-flex flex-column">
+          <div class="p-2 border">&nbsp;&nbsp;Vacio</div>
+                     
+      </div>
+    </div>
+    <!--Pedido,Fin-->
+       <div style="height: 500px"></div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();   
+      });
+      </script>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+	<meta charset="utf-8" />
+   	<meta name="viewport" content="width=device-width, initial-scale=1" />
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+   <script>
+
+	var gct;
+	function ped(){
+	
+		$('#bpedido').empty();
+		$.get("consulta5.php", function(data){
+                        
+			gct=JSON.parse(data);
+			for(var i=0; i<gct["AllPedidos"].length; i++){
+				
+				$('#pedido > tbody:last-child').append(' '
+				+'<tr><td >'+gct["AllPedidos"][i].id_pedido+'</td>'
+				+'<td >'+gct["AllPedidos"][i].nombre_cliente+'</td>'
+				+'<td >'+gct["AllPedidos"][i].nombre_platillo+'</td>'
+				+'<td >'+gct["AllPedidos"][i].nombre_guisado+'</td>'
+				+'<td style="width:180">'
+				+'<button value="'+gct["AllPedidos"][i].id_pedido+'" onclick="guarda(this)" type="button" class="btn btn-info"><i class="fas fa-check"></i></button>'
+		  		+'</td></tr>');
+					
+				
+			};
+        	    });
+	}
+        ped();
+	setInterval(function(){
+		ped();
+        	},180000);    
+ 
+
+
+	function guarda(b){
+
+		$.get("consulta3.php?name="+b.value);
+		ped();
+	}       
+	
+    </script>
+<title>Pedidos</title>
+
+   </head>
+  
+<body  class="text-center"> 
+	<nav style="background-color: red;" class="navbar navbar-expand-sm  fixed-top" >
+	<a class="navbar-brand" href="#" style="color: white"><strong>PEDIDOS</strong> <i class="far fa-clipboard"></i></a>
+	</nav>
+	<br/><br/><br/>
+ <div class="container-fluid" style="margin-top:0px">
+<div class="container">
+	<div class="table-responsive ">
+ 	<table class="table table-bordered" id="pedido">
+                  <thead>  
+                    <tr style="background-color: yellow;">
+                      <th>No</th>
+                      <th style="width: 40%;">Cliente</th>
+                      <th>Platillo</th>
+                      <th>Guisado</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bpedido">
+                  </tbody>  
+                </table>
+	</div>
+   </div>
+</div>
+	<br/>
+	
+<!--	<button style="background-color: black; color: white; FONT-FAMILY: Arial;" class="btn btn-primary" onclick="guarda()"><strong>Actualizar<strong></button> -->
+	
+	</body>
+
+</html>
+
