@@ -1,10 +1,7 @@
 <?php
 /*Datos de conexion a la base de datos*/
 
-$db_host = "localhost:3306";
-$db_user = "BQG";
-$db_pass = "BQG";
-$db_name = "cafeteria";
+include 'conexion.php';
  
 $con = mysqli_connect($db_host, $db_user, $db_pass, $db_name) 
 or die('Not connected : Ah sh*t ' . mysqli_connect_error());

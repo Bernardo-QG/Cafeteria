@@ -1,14 +1,10 @@
 <?php
-session_start();
-?> 
-
-<?php
 
 include 'conexion.php';
 
-$conexion = new mysqli($host_db, $user_db, $pass_db, $db_name);
+$conexion = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conexion->connect_error) {
- die("La conexion falló: " . $conexion->connect_error);
+ die("La conexion fallï¿½: " . $conexion->connect_error);
 } 
 
 $cond=$_GET["name"];

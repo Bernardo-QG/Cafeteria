@@ -1,14 +1,12 @@
-<?php
-session_start();
-?> 
+
 
 <?php
 
-include 'conexion2.php';
+include 'conexion.php';
 
-$conexion = new mysqli($host_db, $user_db, $pass_db, $db_name);
+$conexion = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conexion->connect_error) {
- die("La conexion falló: " . $conexion->connect_error);
+ die("La conexion fallo: " . $conexion->connect_error);
 } 
 
 $sql = "select * from menu inner join pedidos on id_platillo = fid_platillo inner join guisados on id_guisado = fid_guisado";

@@ -18,7 +18,7 @@
 	function ped(){
 	
 		$('#bpedido').empty();
-		$.get("consulta5.php", function(data){
+		$.get("consulta.php", function(data){
                         
 			gct=JSON.parse(data);
 			for(var i=0; i<gct["AllPedidos"].length; i++){
